@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bryllupsspørgsmål / Wedding Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+        }
+
+        .slide {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            padding: 60px;
+            color: black;
+            text-align: center;
+            overflow-y: auto;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide h1 {
+            font-size: 5em;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 8px rgba(255,255,255,0.5);
+            color: #d63384;
+        }
+
+        .intro-text {
+            font-size: 1.8em;
+            line-height: 1.6;
+            margin: 40px auto;
+            max-width: 800px;
+        }
+
+        .intro-text p {
+            margin: 25px 0;
+        }
+
+        .intro-text strong {
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        .question-container {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            margin: 0 auto;
+            max-width: 1500px;
+            width: 99%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .language-section {
+            margin: 30px 0;
+            padding: 35px;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .language-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .danish {
+            background: linear-gradient(45deg, #ffebee, #fce4ec);
+            border-left: 6px solid #e91e63;
+        }
+
+        .english {
+            background: linear-gradient(45deg, #e8f5e8, #f1f8e9);
+            border-left: 6px solid #4caf50;
+        }
+
+        .polish {
+            background: linear-gradient(45deg, #e3f2fd, #e1f5fe);
+            border-left: 6px solid #2196f3;
+        }
+
+        .language-label {
+            font-weight: bold;
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .question-text {
+            font-size: 2.6em;
+            font-weight: 600;
+            color: #333;
+            line-height: 1.3;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 25px;
+            z-index: 1000;
+        }
+
+        .btn {
+            padding: 18px 35px;
+            border: none;
+            border-radius: 35px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            position: absolute;
+            top: 40px;
+            right: 50px;
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.2em;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .hearts {
+            position: absolute;
+            top: 40px;
+            left: 50px;
+            font-size: 3em;
+            color: #e91e63;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Slide 0: Title -->
+    <div class="slide active">
+        <div class="hearts">💕</div>
+        <h1>Bryllupsspørgsmål</h1>
+        <h1>Wedding Quiz</h1>
+        <h1>Kwestionariusz Ślubny</h1>
+        
+        <div style="display: flex; align-items: center; justify-content: center; gap: 60px; max-width: 1200px; margin: 40px auto;">
+            <div>
+                <img src="bryllupsbillede.jpg" alt="Bryllupsbillede" style="width: 400px; height: 300px; object-fit: cover; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+            </div>
+            
+            <div class="intro-text" style="text-align: left; margin: 0;">
+                <p style="font-weight: bold; font-size: 1.2em;">Hvem af brudeparret passer bedst til spørgsmålene?</p>
+                <p style="font-weight: bold; font-size: 1.2em;">Which of the couple fits the questions best?</p>
+                <p style="font-weight: bold; font-size: 1.2em;">Które z młodej pary najlepiej pasuje do pytań?</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 1 -->
+    <div class="slide">
+        <div class="hearts">💕</div>
+        <div class="slide-counter">1/12</div>
+        <div class="question-container">
+            <div class="language-section danish">
+                <div class="language-label">🇩🇰 Dansk:</div>
+                <div class="question-text">Hvem tager de længste bade?</div>
+            </div>
+            <div class="language-section english">
+                <div class="language-label">🇬🇧 English:</div>
+                <div class="question-text">Who takes the longest baths?</div>
+            </div>
+            <div class="language-section polish">
+                <div class="language-label">🇵🇱 Polski:</div>
+                <div class="question-text">Kto bierze najdłuższe kąpiele?</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="slide">
+        <div class="hearts">💕</div>
+        <div class="slide-counter">2/12</div>
+        <div class="question-container">
+            <div class="language-section danish">
+                <div class="language-label">🇩🇰 Dansk:</div>
+                <div class="question-text">Hvem er mest morgensur?</div>
+            </div>
+            <div class="language-section english">
+                <div class="language-label">🇬🇧 English:</div>
+                <div class="question-text">Who is the most grumpy in the morning?</div>
+            </div>
+            <div class="language-section polish">
+                <div class="language-label">🇵🇱 Polski:</div>
+                <div class="question-text">Kto jest najbardziej gderliwy rano?</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="slide">
+        <div class="hearts">💕</div>
+        <div class="slide-counter">3/12</div>
+        <div class="question-container">
+            <div class="language-section danish">
+                <div class="language-label">🇩🇰 Dansk:</div>
+                <div class="question-text">Hvem gør mest rent?</div>
+            </div>
+            <div class="language-section english">
+                <div class="language-label">🇬🇧 English:</div>
+                <div class="question-text">Who cleans the most?</div>
+            </div>
+            <div class="language-section polish">
+                <div class="language-label">🇵🇱 Polski:</div>
+                <div class="question-text">Kto sprząta najwięcej?</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4 -->
+    <div class="slide">
+        <div class="hearts">💕</div>
+        <div class="slide-counter">4/12</div>
+        <div class="question-container">
+            <div class="language-section danish">
+                <div class="language-label">🇩🇰 Dansk:</div>
+                <div class="question-text">Hvem har den bedste hukommelse?</div>
+            </div>
+            <div class="language-section english">
+                <div class="language-label">🇬🇧 English:</div>
+                <div class="question-text">Who has the best memory?</div>
+            </div>
+            <div class="language-section polish">
+                <div class="language-label">🇵🇱 Polski:</div>
+                <div class="question-text">Kto ma najlepszą pamięć?</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5 -->
+    <div class="slide">
+        <div class="hearts">💕</div>
+        <div class="slide-counter">5/12</div>
+        <div class="question-container">
+            <div class="language-section danish">
+                <div class="language-label">🇩🇰 Dansk:</div>
+                <div class="question-text">Hvem er bedst til at køre bil?</div>
+            </div>
+            <div class="language-section english">
+                <div class="language-label">🇬🇧 English:</div>
+                <div class="question-text">Who is the best driver?</div>
+            </div>
+            <div class="language-section polish">
+                <div class="language-label">🇵🇱 Polski:</div>
+                <div class="question-text">Kto najlepiej prowadzi samochód?</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6 -->
+    <div class="slide">
+        <div class="hearts">💕</div>
+        <div class="slide-counter">6/12</div>
+        <div class="question-container">
+            <div class="language-section danish">
+                <div class="language-label">🇩🇰 Dansk:</div>
+                <div class="question-text">Hvem bruger flest penge?</div>
+            </div>
+            <div class="language-section english">
+                <div class="language-label">🇬🇧 English:</div>
+                <div class="question-text">Who spends the most money?</div>
+            </div>
+            <div class="language-section polish">
+                <div class="language-label">🇵🇱 Polski:</div>
+                <div class="question-text">Kto wydaje najwięcej pieniędzy?</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 7 -->
+    <div class="slide">
+        <div class="hearts">💕</div>
+        <div class="slide-counter">7/12</div>
+        <div class="question-container">
+            <div class="language-section danish">
+                <div class="language-label">🇩🇰 Dansk:</div>
+                <div class="question-text">Hvem slår de største prutter?</div>
+            </div>
+            <div class="language-section english">
+                <div class="language-label">🇬🇧 English:</div>
+                <div class="question-text">Who has the loudest farts?</div>
+            </div>
+            <div class="language-section polish">
+                <div class="language-label">🇵🇱 Polski:</div>
+                <div class="question-text">Kto puszcza najgłośniejsze bąki?</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 8 -->
+    <div class="slide">
+        <div class="hearts">💕</div>
+        <div class="slide-counter">8/12</div>
+        <div class="question-container">
+            <div class="language-section danish">
+                <div class="language-label">🇩🇰 Dansk:</div>
+                <div class="question-text">Hvem er mest tålmodig?</div>
+            </div>
+            <div class="language-section english">
+                <div class="language-label">🇬🇧 English:</div>
+                <div class="question-text">Who is the most patient?</div>
+            </div>
+            <div class="language-section polish">
+                <div class="language-label">🇵🇱 Polski:</div>
+                <div class="question-text">Kto jest najbardziej cierpliwy?</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 9 -->
+    <div class="slide">
+        <div class="hearts">💕</div>
+        <div class="slide-counter">9/12</div>
+        <div class="question-container">
+            <div class="language-section danish">
+                <div class="language-label">🇩🇰 Dansk:</div>
+                <div class="question-text">Hvem roder mest?</div>
+            </div>
+            <div class="language-section english">
+                <div class="language-label">🇬🇧 English:</div>
+                <div class="question-text">Who is the messiest?</div>
+            </div>
+            <div class="language-section polish">
+                <div class="language-label">🇵🇱 Polski:</div>
+                <div class="question-text">Kto najbardziej bałagani?</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 10 -->
+    <div class="slide">
+        <div class="hearts">💕</div>
+        <div class="slide-counter">10/12</div>
+        <div class="question-container">
+            <div class="language-section danish">
+                <div class="language-label">🇩🇰 Dansk:</div>
+                <div class="question-text">Hvem kan blive mest sur?</div>
+            </div>
+            <div class="language-section english">
+                <div class="language-label">🇬🇧 English:</div>
+                <div class="question-text">Who can get the most angry?</div>
+            </div>
+            <div class="language-section polish">
+                <div class="language-label">🇵🇱 Polski:</div>
+                <div class="question-text">Kto potrafi się najbardziej wściec?</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 11 -->
+    <div class="slide">
+        <div class="hearts">💕</div>
+        <div class="slide-counter">11/12</div>
+        <div class="question-container">
+            <div class="language-section danish">
+                <div class="language-label">🇩🇰 Dansk:</div>
+                <div class="question-text">Hvem kan bedst lide kæledyr?</div>
+            </div>
+            <div class="language-section english">
+                <div class="language-label">🇬🇧 English:</div>
+                <div class="question-text">Who loves pets the most?</div>
+            </div>
+            <div class="language-section polish">
+                <div class="language-label">🇵🇱 Polski:</div>
+                <div class="question-text">Kto najbardziej kocha zwierzęta domowe?</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 12 -->
+    <div class="slide">
+        <div class="hearts">💕</div>
+        <div class="slide-counter">12/12</div>
+        <div class="question-container">
+            <div class="language-section danish">
+                <div class="language-label">🇩🇰 Dansk:</div>
+                <div class="question-text">Hvem er bedst til at finde vej?</div>
+            </div>
+            <div class="language-section english">
+                <div class="language-label">🇬🇧 English:</div>
+                <div class="question-text">Who is best at finding directions?</div>
+            </div>
+            <div class="language-section polish">
+                <div class="language-label">🇵🇱 Polski:</div>
+                <div class="question-text">Kto najlepiej znajduje drogę?</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 13: Skål -->
+    <div class="slide">
+        <div class="hearts">💕</div>
+        <h1 style="margin-bottom: 30px;">Lad os alle sammen skåle for brudeparret!</h1>
+        <h1 style="margin-bottom: 30px;">Let's all raise a toast to the happy couple!</h1>
+        <h1 style="margin-bottom: 60px;">Wznieśmy toast za szczęśliwą parę!</h1>
+        
+        <div style="text-align: center; margin: 50px 0;">
+            <p style="font-size: 2.4em; font-weight: bold; color: #d63384; margin: 30px 0;">🥂 Skål! 🥂</p>
+            <p style="font-size: 2.4em; font-weight: bold; color: #e91e63; margin: 30px 0;">🥂 Cheers! 🥂</p>
+            <p style="font-size: 2.4em; font-weight: bold; color: #2196f3; margin: 30px 0;">🥂 Na zdrowie! 🥂</p>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn" id="prevBtn" onclick="previousSlide()">← Forrige</button>
+        <button class="btn" id="nextBtn" onclick="nextSlide()">Næste →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide() {
+            // Hide all slides
+            slides.forEach(slide => slide.classList.remove('active'));
+            // Show current slide
+            slides[currentSlide].classList.add('active');
+            
+            // Update buttons
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+            
+            if (currentSlide === totalSlides - 1) {
+                document.getElementById('nextBtn').textContent = 'Skål! 🥂';
+            } else {
+                document.getElementById('nextBtn').textContent = 'Næste →';
+            }
+            
+            // Debug info
+            console.log(`Current slide: ${currentSlide + 1} of ${totalSlides}`);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                showSlide();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                showSlide();
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight' || event.key === ' ') {
+                event.preventDefault();
+                nextSlide();
+            } else if (event.key === 'ArrowLeft') {
+                event.preventDefault();
+                previousSlide();
+            }
+        });
+
+        // Initialize
+        showSlide();
+    </script>
+</body>
+</html>
